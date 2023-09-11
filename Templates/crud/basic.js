@@ -18,18 +18,18 @@ exports.find = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 200,
     success: true,
-    message: '<<Model>> Created Successfully',
+    message: '',
     data: {<<model>>},
   });
 });
 
 exports.index = catchAsync(async (req, res, next) => {
-  const <<model>> = await <<Model>>.find(JSON.parse(decodeURIComponent(req.query.query)))
+  const <<model>> = await <<Model>>.find( req.query.query ? JSON.parse(decodeURIComponent(req.query.query)) : {})
 
   res.status(200).json({
     status: 200,
     success: true,
-    message: '<<Model>> Created Successfully',
+    message: '',
     data: {<<model>>},
   });
 });
@@ -57,9 +57,10 @@ exports.update = catchAsync(async (req, res, next) => {
 });
 
 exports.delete = catchAsync(async (req, res, next) => {
-    const <<model>> = await TxDeleter.deleteOne("<<Model>>", req.params.id)
+  let <<model>> =  await <<Model>>.findOne(req.params.id ? { _id: req.params.id } : JSON.parse(decodeURIComponent(req.query)))
+  <<model>> = await TxDeleter.deleteOne("<<Model>>", req.params.id)
 
-    res.status(200).json({
+  res.status(200).json({
       status: 200,
       success: true,
       message: '<<Model>> Deleted',
